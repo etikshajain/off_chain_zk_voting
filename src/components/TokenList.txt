@@ -1,0 +1,3 @@
+// Clearing out lingo
+
+Token 1 == Quickswap
