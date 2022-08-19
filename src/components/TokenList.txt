@@ -1,0 +1,7 @@
+// Clearing out lingo
+
+Token 1 == Quickswap
+Token 2 == Balancer BAL token
+Token 3 == AAVE token
+Token 4 == Uniswap UNI token
+Token 5 == Curve CRV token
