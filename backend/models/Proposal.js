@@ -5,38 +5,15 @@ const ProposalSchema=new mongoose.Schema({
         type:String, //mongoose.Schema.Types.ObjectId
         required:true
     },
-    title:{
+    sc_address:{
         type:String,
         required:true
     },
-    description:{
-        type:String,
-        required:true
-    },
-    start_time:{
-        type:Date,
-        required:true
-    },
-    end_time:{
-        type:Date,
-        required:true
-    },
-    voting_type:{
-        type:String, //SingleChoice,
-        default:'SingleChoice'
-    },
-    voters:[
-        {type:String},
+    agree:[
+        [Number]
     ],
-    count:{
-        type:Number,
-        default:0
-    },
-    min_tokens_to_vote:{
-        type:Number
-    },
-    options:[
-        {type:mongoose.Schema.Types.ObjectId}
+    disagree:[
+        [Number]
     ]
     
 });

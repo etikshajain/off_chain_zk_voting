@@ -20,9 +20,9 @@ function App() {
       <div>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/protocol" element={<Protocol protocol={"protocol"} tokens={5} min_tokens_to_create={2} />} />
+          <Route exact path="/protocol" element={<Protocol protocol={"protocol"}  min_tokens_to_create={2} />} />
           <Route exact path="/createprop" element={<CreateProposal protocol={"protocol"} />} />
-          <Route exact path="/protocols" element={<Protocols tokens={5}/>} />
+          <Route exact path="/protocols" element={<Protocols />} />
         </Routes>
       </div>
     </ProposalState>

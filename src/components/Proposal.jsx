@@ -1,44 +1,72 @@
 import React from 'react'
 import { useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
-
+import proposalContext from '../context/context'
+//props.proposal
 const Proposal = (props) => {
   const [vote, setVote] = useState("vote")
-
+  const { tokens, getTokens, checkVoter, getVoterslist, registerVote, currentAccount } = useContext(proposalContext);
+  let dt = new Date();
+  let ds = new Date(props.proposal.start_time);
+  let de = new Date(props.proposal.end_time);
   useEffect(() => {
-    if (props.proposal.min_tokens_to_vote > props.tokens) {
-      setVote("cannot");
+    getTokens();
+    const voted = async ()=>{
+        const v = await checkVoter(props.protocol, props.proposal.id, currentAccount);
+        console.log("already voted:")
+        if(v===true){
+          setVote("Already Voted")
+        }
+        return v;
+    }
+    let v = voted()
+    if (props.proposal.min_tokens_to_vote > tokens) {
+      setVote("Insufficient tokens.");
+    }
+    if (dt > de) {
+      if (vote === "vote") {
+        setVote("This proposal is now closed.")
+      }
+    }
+  
+    if (dt < ds) {
+      if (vote === "vote") {
+        setVote("This proposal is not opened yet.")
+      }
+    }
+
+    if(v==true){
+      console.log("yes")
+      setVote("Already Voted")
     }
     else {
       setVote("vote");
     }
   }, [])
 
-  let dt = new Date();
-  let ds = new Date(props.proposal.start_time);
-  let de = new Date(props.proposal.end_time);
-  if (dt > de) {
-    if (vote === "vote") {
-      setVote("This proposal is now closed.")
-    }
-  }
-
-  if (dt < ds) {
-    if (vote === "vote") {
-      setVote("This proposal is not opened yet.")
-    }
-  }
-
   const [hover, sethover] = useState(false)
-  const toggleHover = () => {
-    sethover(!hover);
-  }
-  var linkStyle;
-  if (hover) {
-    linkStyle = { textDecoration: "underline", cursor: 'pointer' }
-  } else {
-    linkStyle = { color: '#000' }
-  }
+    const toggleHover=()=> {
+        sethover(!hover);
+    }
+    var linkStyle;
+    if (hover) {
+        linkStyle = {textDecoration:"underline",cursor: 'pointer'}
+    } else {
+        linkStyle = {color: '#000'}
+    }
+
+    const [hover2, sethover2] = useState(false)
+    const toggleHover2=()=> {
+        sethover2(!hover2);
+    }
+    var linkStyle2;
+    if (hover2) {
+        linkStyle2 = {textDecoration:"underline",cursor: 'pointer'}
+    } else {
+        linkStyle2 = {color: '#000'}
+    }
+
+
   return (
     <>
     <div class="card" style={{marginBottom:"15px"}}>
@@ -51,7 +79,8 @@ const Proposal = (props) => {
     </div>
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
 
-    <h3 class="card-title">{props.proposal.title}</h3>
+    <h2 className="card-title" style={{display:"inline"}}><a type="button" style={linkStyle} onMouseEnter={toggleHover} onMouseLeave={toggleHover} onClick={()=>{props.ViewProp(props.proposal.protocol, props.proposal)}}>{props.proposal.title}</a></h2>
+    {/* <h3 class="card-title">{props.proposal.title}</h3> */}
 
     <p>{props.proposal.description}</p>
     <p><strong>Deadline : </strong>{props.proposal.end_time}</p>
@@ -60,18 +89,19 @@ const Proposal = (props) => {
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
     {vote === "vote" ?
     <>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() => {window.alert("voted")}} style = {{marginLeft: "50px" }}>Agree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={()=>{props.Vote(props.proposal.protocol, props.proposal.id, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Agree</button>
       </div>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() => {window.alert("voted")}} style = {{marginLeft: "50px" }}>Disagree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.protocol, props.proposal.id, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Disagree</button>
       </div>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() => {window.alert("voted")}} style = {{marginLeft: "50px" }}>Can't Decide</button>
+      </>: <>
+        <div class="col-8"><button type="button" className="btn btn-primary disabled" style = {{marginLeft: "50px" }}>{vote}</button>
       </div>
-      </>: <></>}
+      </>}
     </div>
 
-    {vote==="vote" || dt>de ? 
+    {vote==="vote" || vote==="Already Voted" || dt>de ? 
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
-        <button type="button" className="btn btn-primary" onClick={() => { }} style={{ marginLeftt: "50px"}}>View Voters</button>
+        <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.protocol, props.proposal.id)}} style={{ marginLeftt: "50px"}}>View Voters</button>
     </div> :<></>}
 
     </div>

@@ -4,15 +4,6 @@ import { useNavigate } from "react-router-dom";
 // protocol
 const CreateProposal = (props) => {
   let navigate = useNavigate();
-  // useEffect(() => {
-  //   if (props.tokens < props.min_tokens) {
-  //     //getApplproposals();
-  //   }
-  //   else {
-  //     window.alert("You don't have sufficient tokens to create a proposal.")
-  //     history.push("/protocol");
-  //   }
-  // }, [])
   const { addProposal } = useContext(proposalContext);
   const [proposal, setProposal] = useState({ id: 0, title: "", description: "", start_time: "", end_time: "", voting_type: "", min_tokens_to_vote: 0 })
 
