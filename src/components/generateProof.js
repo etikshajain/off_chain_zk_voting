@@ -20,7 +20,7 @@ export default function generateProof(a){
     ( p1, p2 ) = makeProof( proofInput, wasmFile, zkeyFile );
     setProof(p1);
     setSignals(p2);
-    return { proof, signals }; 
+    return { proof, signals } ;
 }
 
 
