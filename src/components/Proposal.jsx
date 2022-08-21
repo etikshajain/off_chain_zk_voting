@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect, useState, useContext } from "react";
+import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
 
 const Proposal = (props) => {
   const [vote, setVote] = useState("vote")
@@ -38,34 +39,42 @@ const Proposal = (props) => {
   } else {
     linkStyle = { color: '#000' }
   }
-
   return (
     <>
-      <div className="my-3">
+    <div class="card" style={{marginBottom:"15px"}}>
+    <div class="row" style={{margin:"15px", marginBottom:"0px"}}>
+    <div class="col-1" style={{width:"36px", height:"36px", marginRight:"3px"}}><img src="https://i.ibb.co/25ffKLH/Ellipse-1.png" alt="Ellipse-1" border="0" height="36" width="36"/></div>
+    <div class="col-8" style={{textAlign:"left", marginTop:"4px"}}><p>0x5346387920874352631</p></div>
+    <div class="col-3" style={{textAlign:"left", marginTop:"4px"}}>
+    {dt > de ? <span className="badge bg-danger" style={{ width: "160px" }}>Closed</span> : dt < ds ? <span className="badge bg-warning" style={{ width: "160px"}}>Opening Soon</span> : <span className="badge bg-success" style={{ width: "160px"}}>Active</span>}
+    </div>
+    </div>
+    <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
 
-        {dt > de ? <span className="badge bg-danger" style={{ width: "160px", marginLeft: "25px" }}>Closed</span> : dt < ds ? <span className="badge bg-warning" style={{ width: "160px", marginLeft: "25px" }}>Opening Soon</span> : <span className="badge bg-info" style={{ width: "160px", marginLeft: "25px" }}>Open</span>}
+    <h3 class="card-title">{props.proposal.title}</h3>
 
-        <div className="card my-2 mx-4" style={{ width: "90%", backgroundColor: "white" }}>
-          <div className="card-body">
-            <h4 className="card-title" style={{ display: "inline" }}><a type="button" style={linkStyle} onMouseEnter={toggleHover} onMouseLeave={toggleHover} onClick={() => { }}>{props.proposal.title}</a></h4>
+    <p>{props.proposal.description}</p>
+    <p><strong>Deadline : </strong>{props.proposal.end_time}</p>
+    </div>
 
-            <p style={{ marginBottom: "0px" }} className="my-2"><strong>Description : </strong>{props.proposal.description} </p>
-            <p style={{ marginBottom: "0px" }} className="my-2"><strong>Deadline : </strong>{dt > de ? "Ended" : props.proposal.end_time.substring(0, 10)} </p>
-
-            <div className="my-2">
-              {vote === "vote" ?
-                <button type="button" className="btn btn-primary" onClick={() => { }} style={{ marginLeftt: "50px" }}>Vote</button>
-                : <button className="btn btn-primary disabled" style={{ marginBottom: "0px" }}>{vote}</button>}
-
-              <button type="button" className="btn btn-primary" onClick={() => { }} style={{ marginLeftt: "50px" }}>View Voters</button>
-            </div>
-
-          </div>
-        </div>
-
-
-
+    <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
+    {vote === "vote" ?
+    <>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() => {window.alert("voted")}} style = {{marginLeft: "50px" }}>Agree</button>
       </div>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() => {window.alert("voted")}} style = {{marginLeft: "50px" }}>Disagree</button>
+      </div>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() => {window.alert("voted")}} style = {{marginLeft: "50px" }}>Can't Decide</button>
+      </div>
+      </>: <></>}
+    </div>
+
+    {vote==="vote" || dt>de ? 
+    <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
+        <button type="button" className="btn btn-primary" onClick={() => { }} style={{ marginLeftt: "50px"}}>View Voters</button>
+    </div> :<></>}
+
+    </div>
     </>
   )
 }

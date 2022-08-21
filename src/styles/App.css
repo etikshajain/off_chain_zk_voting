@@ -1,13 +1,77 @@
+html, body {
+  padding:0px;
+  margin:0px;
+  background-color:#fce4d8;
+}
+
+.nav-text{
+font-family: 'VCR EAS';
+font-style: normal;
+font-weight: 400;
+font-size: 26px;
+line-height: 38px;
+color: #000000;
+}
+
+.nav-btn{
+  font-family: 'VCR EAS';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 34px;
+  color: #000000;
+  }
+
+.home-left{
+  width: 900px;
+  height: 900px;
+  /* background: url(.png); */
+}
+
+.home-right{
+  padding-top:50px;
+  width: 900px;
+  height: 900px;
+  /* background: url(.png); */
+}
+
+.home-text{
+width: 522px;
+height: 120px;
+font-family: 'VCR EAS';
+font-style: normal;
+font-weight: 400;
+font-size: 50px;
+line-height: 64px;
+color: #000000;
+}
+.home-btn{
+  /* position: absolute; */
+width: 260px;
+height: 60px;
+margin-top:80px;
+font-family: 'VCR EAS';
+font-style: normal;
+font-weight: 200;
+font-size: 24px;
+background: #000000;
+}
+
+.protocol-img{
+  margin-top:20px;
+  margin-left:70px;
+}
+
 /* .App {
   height: 100vh;
-  background-color: #0d1116;
+  background-color: #fce4d8;
   overflow: scroll;
   text-align: center;
 }
 
 .container {
   height: 100%;
-  background-color: #0d1116;
+  background-color: #fce4d8;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -88,38 +152,4 @@
   font-size: 16px;
   font-weight: bold;
 }
-
-/* KeyFrames */
-/* @-webkit-keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@-moz-keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}*/
+ */

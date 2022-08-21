@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react'
 import proposalContext from '../context/context'
+import { useNavigate } from "react-router-dom";
 // protocol
 const CreateProposal = (props) => {
-  // let history = useHistory();
+  let navigate = useNavigate();
   // useEffect(() => {
   //   if (props.tokens < props.min_tokens) {
   //     //getApplproposals();
@@ -19,6 +20,7 @@ const CreateProposal = (props) => {
     e.preventDefault(); //to prevent page reload upon submitting
     addProposal(proposal.id, proposal.title, proposal.description, proposal.start_time, proposal.end_time, proposal.voting_type, proposal.min_tokens_to_vote, props.protocol);
     setProposal({ id: 0, title: "", description: "", start_time: "", end_time: "", voting_type: "", min_tokens_to_vote: 0 });
+    // navigate("/");
   }
   const handleOnChange = (e) => {
     setProposal({ ...proposal, [e.target.name]: e.target.value });

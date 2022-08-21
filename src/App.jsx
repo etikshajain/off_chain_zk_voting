@@ -9,25 +9,20 @@ import Home from './components/Home';
 // import About from './components/About';
 import CreateProposal from './components/createProposal';
 import Protocol from './components/Protocol';
+import Protocols from './components/Protocols';
+import Navbar from './components/Navbar';
 
 
 function App() {
   return (
     <ProposalState>
-      {/* <Alert msg="this is alert"/> */}
-      {/* <Navbar/> */}
-      {/* <div class="sidebar">
-            <a class="active" href="#home">Home</a>
-            <a href="#news">News</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
-      </div> */}
-      {/*<Navbar />*/}
-      <div className="content my-5">
+      <Navbar />
+      <div>
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/protocol" element={<Protocol protocol={"protocol"} tokens={5} min_tokens_to_create={2} />} />
           <Route exact path="/createprop" element={<CreateProposal protocol={"protocol"} />} />
+          <Route exact path="/protocols" element={<Protocols tokens={5}/>} />
         </Routes>
       </div>
     </ProposalState>
