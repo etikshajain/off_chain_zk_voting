@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 const CreateProposal = (props) => {
   let navigate = useNavigate();
   const { addProposal } = useContext(proposalContext);
-  const [proposal, setProposal] = useState({ id: 0, title: "", description: "", start_time: "", end_time: "", voting_type: "", min_tokens_to_vote: 0 })
+  const [proposal, setProposal] = useState({title: "", description: "", start_time: "", end_time: "", voting_type: ""})
 
   const handleClick = async (e) => {
     e.preventDefault(); //to prevent page reload upon submitting
-    addProposal(proposal.id, proposal.title, proposal.description, proposal.start_time, proposal.end_time, proposal.voting_type, proposal.min_tokens_to_vote, props.protocol);
-    setProposal({ id: 0, title: "", description: "", start_time: "", end_time: "", voting_type: "", min_tokens_to_vote: 0 });
+    addProposal(proposal.title, proposal.description, proposal.start_time, proposal.end_time, proposal.voting_type, props.protocol);
+    setProposal({title: "", description: "", start_time: "", end_time: "", voting_type: ""});
     // navigate("/");
   }
   const handleOnChange = (e) => {
@@ -23,8 +23,6 @@ const CreateProposal = (props) => {
         <h1>Create a new Proposal:</h1>
         <form className="my-3">
           <div className="mb-3">
-            <label htmlFor="id" className="form-label">Proposal ID</label>
-            <textarea className="form-control" id="id" name="id" rows="1" value={proposal.id} onChange={handleOnChange}  ></textarea>
 
             <label htmlFor="title" className="form-label">Title</label>
             <textarea className="form-control" id="title" name="title" rows="1" value={proposal.title} onChange={handleOnChange}  ></textarea>
@@ -40,9 +38,6 @@ const CreateProposal = (props) => {
 
             <label htmlFor="voting_type" className="form-label">Voting Type</label>
             <textarea className="form-control" id="voting_type" name="voting_type" value={proposal.voting_type} rows="4" onChange={handleOnChange} placeholder="Enter Text" required></textarea>
-
-            <label htmlFor="min_tokens_to_vote" className="form-label">Minimum tokens to Vote</label>
-            <input type="min_tokens_to_vote" className="form-control" id="min_tokens_to_vote" onChange={handleOnChange} name="min_tokens_to_vote" value={proposal.min_tokens_to_vote} />
 
           </div>
           <div className="my-2">

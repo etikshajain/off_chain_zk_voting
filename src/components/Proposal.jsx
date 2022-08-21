@@ -5,14 +5,14 @@ import proposalContext from '../context/context'
 //props.proposal
 const Proposal = (props) => {
   const [vote, setVote] = useState("vote")
-  const { tokens, getTokens, checkVoter, getVoterslist, registerVote, currentAccount } = useContext(proposalContext);
+  const { tokens, getTokens, checkVoter, currentAccount } = useContext(proposalContext);
   let dt = new Date();
   let ds = new Date(props.proposal.start_time);
   let de = new Date(props.proposal.end_time);
   useEffect(() => {
-    getTokens();
+    getTokens(props.proposal.protocol);
     const voted = async ()=>{
-        const v = await checkVoter(props.protocol, props.proposal.id, currentAccount);
+        const v = await checkVoter(props.proposal.sc_address, props.proposal.abi);
         console.log("already voted:")
         if(v===true){
           setVote("Already Voted")
@@ -20,7 +20,7 @@ const Proposal = (props) => {
         return v;
     }
     let v = voted()
-    if (props.proposal.min_tokens_to_vote > tokens) {
+    if (tokens<1) {
       setVote("Insufficient tokens.");
     }
     if (dt > de) {
@@ -36,7 +36,6 @@ const Proposal = (props) => {
     }
 
     if(v==true){
-      console.log("yes")
       setVote("Already Voted")
     }
     else {
@@ -79,7 +78,7 @@ const Proposal = (props) => {
     </div>
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
 
-    <h2 className="card-title" style={{display:"inline"}}><a type="button" style={linkStyle} onMouseEnter={toggleHover} onMouseLeave={toggleHover} onClick={()=>{props.ViewProp(props.proposal.protocol, props.proposal)}}>{props.proposal.title}</a></h2>
+    <h2 className="card-title" style={{display:"inline"}}><a type="button" style={linkStyle} onMouseEnter={toggleHover} onMouseLeave={toggleHover} onClick={()=>{props.ViewProp(props.proposal)}}>{props.proposal.title}</a></h2>
     {/* <h3 class="card-title">{props.proposal.title}</h3> */}
 
     <p>{props.proposal.description}</p>
@@ -89,9 +88,9 @@ const Proposal = (props) => {
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
     {vote === "vote" ?
     <>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={()=>{props.Vote(props.proposal.protocol, props.proposal.id, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Agree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={()=>{props.Vote(props.proposal.sc_address, props.proposal.abi, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Agree</button>
       </div>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.protocol, props.proposal.id, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Disagree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.sc_address, props.proposal.abi, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Disagree</button>
       </div>
       </>: <>
         <div class="col-8"><button type="button" className="btn btn-primary disabled" style = {{marginLeft: "50px" }}>{vote}</button>
@@ -101,7 +100,7 @@ const Proposal = (props) => {
 
     {vote==="vote" || vote==="Already Voted" || dt>de ? 
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
-        <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.protocol, props.proposal.id)}} style={{ marginLeftt: "50px"}}>View Voters</button>
+        <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.sc_address, props.proposal.abi)}} style={{ marginLeftt: "50px"}}>View Voters</button>
     </div> :<></>}
 
     </div>

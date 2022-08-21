@@ -8,14 +8,20 @@ const Proposals = require('../models/Proposal');
 const Options = require('../models/Option');
 
 //fetch all proposals: GET: /api/proposal/fetchallproposals
-// router.get('/fetchallproposals',async (req,res)=>{
-//     try {
-//         const proposals=await Proposals.find({});  //fetching all notes 
-//         return res.json(proposals);
-//     } catch (error) {
-//         return res.status(500).send("Some error occured.");
-//     }
-// });
+router.get('/fetchallproposals/:protocol',async (req,res)=>{
+    try {
+        req_adds=[]
+        const proposals=await Proposals.find({});  //fetching all notes 
+        for(let i=0;i<proposals.length;i++){
+            if(proposals[i].protocol==req.params.protocol){
+                req_adds.push({"address":proposal[i].sc_address, "abi":proposal[i].abi})
+            }
+        }
+        return res.json(req_adds);
+    } catch (error) {
+        return res.status(500).send("Some error occured.");
+    }
+});
 
 //fetch all options of a proposal: GET: /api/proposal/fetchoptions
 // router.get('/fetchoptions/:id',async (req,res)=>{
@@ -73,8 +79,9 @@ router.post('/createprop',
     try{
         //creating new note object:
         prop=await Proposals.create({
-            proposal_id:req.body.proposal_id,
-            sc_address:req.body.sc_address
+            sc_address:req.body.sc_address,
+            protocol:req.body.protocol,
+            abi:req.body.abi
         });
         return res.json(prop);
     }

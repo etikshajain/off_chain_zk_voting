@@ -1,11 +1,15 @@
 const mongoose=require('mongoose');
 
 const ProposalSchema=new mongoose.Schema({
-    proposal_id:{
-        type:String, //mongoose.Schema.Types.ObjectId
+    sc_address:{
+        type:String,
         required:true
     },
-    sc_address:{
+    abi:{
+        type:String,
+        required:true
+    },
+    protocol:{
         type:String,
         required:true
     },

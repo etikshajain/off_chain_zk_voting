@@ -11,12 +11,12 @@ const Protocol = (props) => {let location = useLocation();
       //console.log(location.pathname);
   }, [location]);
 
-  const { proposals, getAllProposals , tokens, getTokens, checkVoter, getVoterslist, registerVote, currentAccount} = useContext(proposalContext);
+  const { proposals, getAllProposals , tokens, getTokens, registerVote, currentAccount} = useContext(proposalContext);
   const [create, setCreate] = useState(false);
 
   useEffect(() => {
     getAllProposals(props.protocol);
-    getTokens()
+    getTokens(props.protocol)
     if (props.min_tokens_to_create > tokens) {
       setCreate(false);
     }
@@ -31,30 +31,31 @@ const Protocol = (props) => {let location = useLocation();
   const [modal,setModal]=useState("");
   const[voters,setVoters]=useState([]);
 
-    const ViewVoters = async (protocol, proposal_id)=>{
-        setModal("voters")
-        const voters_list = await getVoterslist(protocol, proposal_id)
-        if(voters===undefined){
-          setVoters([]);
-        }
-        else{
-          setVoters(voters_list);
-        }
-        ref.current.click();
-        refClose.current.click();
-        console.log(voters);
+    const ViewVoters = async (sc_address, abi)=>{
+        // setModal("voters")
+        // const voters_list = await getVoterslist(protocol, proposal_id)
+        // if(voters===undefined){
+        //   setVoters([]);
+        // }
+        // else{
+        //   setVoters(voters_list);
+        // }
+        // ref.current.click();
+        // refClose.current.click();
+        // console.log(voters);
+        window.alert("voter list how?")
     }
-    const ViewProp = async (protocol, proposal)=>{
+    const ViewProp = async (proposal)=>{
         setModal(proposal)
         ref.current.click();
         refClose.current.click();
     }
 
-    const Vote = async (protocol, proposal_id, proposal_mongo_id, option_id)=>{
-        const r = await registerVote(protocol, proposal_id, proposal_mongo_id, option_id)
+    const Vote = async (sc_address, abi, proposal_mongo_id, option_id)=>{
+        const r = await registerVote(sc_address, abi, proposal_mongo_id, option_id)
         // alert("Voting successful!");
         navigate("/protocols")
-        getAllProposals()
+        getAllProposals(props.protocol)
         // window.location.reload(true);
 
     }
@@ -121,7 +122,7 @@ const Protocol = (props) => {let location = useLocation();
           <div className="col-9" style={{marginTop:"40px"}}>
           {proposals.length===0 ? <h2>No proposals created yet.</h2> : proposals.slice(0).reverse().map((proposal) => {
             return <>
-            <Proposal key={proposal.id} proposal={proposal} ViewVoters={ViewVoters} ViewProp={ViewProp} Vote={Vote}/>
+            <Proposal key={proposal.mongo_id} proposal={proposal} ViewVoters={ViewVoters} ViewProp={ViewProp} Vote={Vote}/>
             </>
           })}
           </div>
