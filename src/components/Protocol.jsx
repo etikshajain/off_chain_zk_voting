@@ -51,8 +51,9 @@ const Protocol = (props) => {let location = useLocation();
         refClose.current.click();
     }
 
-    const Vote = async (sc_address, abi, proposal_mongo_id, option_id)=>{
-        const r = await registerVote(sc_address, abi, proposal_mongo_id, option_id)
+    const Vote = async (sc_address, abi, proposal_mongo_id, option_id, priv_key, key, proof)=>{
+        setModal("TakeInput")
+        const r = await registerVote(sc_address, abi, proposal_mongo_id, option_id, priv_key, key, proof)
         // alert("Voting successful!");
         navigate("/protocols")
         getAllProposals(props.protocol)
@@ -73,28 +74,40 @@ const Protocol = (props) => {let location = useLocation();
             <div className="modal-dialog modal-xl">
                 <div className="modal-content">
                 <div className="modal-header">
-                    <h1 className="modal-title" id="exampleModalLabel">{modal==="voters"?"Voters":modal.title}</h1>
+                    <h1 className="modal-title" id="exampleModalLabel">{modal==="TakeInput"?"Please upload zkp and public key":modal.title}</h1>
                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
                 <form className="my-3">
-                    {modal==="voters"?
+                    {modal==="takeInput"?
                     <div className="mb-3">
                     <table className="table" style={{border:"1px solid black"}}>
                     <thead>
                         <tr style={{textAlign:"center", border:"1px solid black"}}>
-                        <th scope="col" style={{textAlign:"center", border:"1px solid black"}}>Address</th>
+                        <th scope="col" style={{textAlign:"center", border:"1px solid black"}}>
+                        <form method="post" enctype="multipart/form-data">
+                          <div>
+                            <label for="file">Choose key to upload</label>
+                            <input type="file" id="file" name="file" multiple />
+                          </div>
+                          <div>
+                            <button onClick={()=>{}}>Submit</button>
+                          </div>
+                          </form>
+                        </th>
+                        <th scope="col" style={{textAlign:"center", border:"1px solid black"}}>
+                        <form method="post" enctype="multipart/form-data">
+                          <div>
+                            <label for="file">Choose proof to upload</label>
+                            <input type="file" id="file" name="file" multiple />
+                          </div>
+                          <div>
+                            <button onClick={()=>{}}>Submit</button>
+                          </div>
+                          </form>
+                        </th>
                         </tr>
                     </thead>
-                    <tbody>
-                    {
-                        voters.map((voter)=>{
-                         if(voter!==null){
-                         return <tr style={{ border:"1px solid black"}}>
-                                    <td style={{textAlign:"center", border:"1px solid black"}}>{voter}</td>\
-                                </tr>}   
-                    })}
-                    </tbody>
                     </table>
                     </div>:
                     <div className="mb-3">

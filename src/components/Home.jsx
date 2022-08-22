@@ -14,7 +14,7 @@ const Home = () => {
 
   const renderUI = () => (
     <>
-      <span className="home-text">“ MADE TO BE THE FASTEST BLOCKCHAIN ”</span>
+      <span className="home-text">“ MAKING VOTING BETTER ”</span>
       <Link to="/protocols" className="btn btn-dark home-btn">Let's Get Started</Link>
       {/* <a className={location.pathname === "/protocols" ? "active" : ""}><Link to="/protocols" className="cta-button connect-wallet-button">Protocols</Link></a> */}
     </>

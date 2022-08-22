@@ -5,15 +5,34 @@ import proposalContext from '../context/context'
 //props.proposal
 const Proposal = (props) => {
   const [vote, setVote] = useState("vote")
-  const { tokens, getTokens, checkVoter, currentAccount } = useContext(proposalContext);
+  const [abi, setAbi] = useState("vote")
+  const [maker, setmaker] = useState("0x0")
+  const { getProposalMaker,tokens, getTokens, checkVoter, currentAccount, getAbi } = useContext(proposalContext);
   let dt = new Date();
   let ds = new Date(props.proposal.start_time);
   let de = new Date(props.proposal.end_time);
   useEffect(() => {
     getTokens(props.proposal.protocol);
+
+    const fetchAbi = async ()=>{
+      let abi = await getAbi(props.proposal.mongo_id)
+      setAbi(abi)
+      return abi
+    }
+    fetchAbi()
+
+    const fetchMaker = async ()=>{
+      let abii=await fetchAbi()
+      console.log(abii)
+      let m = await getProposalMaker(props.proposal.sc_address, abii)
+      setmaker(m)
+      return m
+    }
+    fetchMaker()
     const voted = async ()=>{
-        const v = await checkVoter(props.proposal.sc_address, props.proposal.abi);
-        console.log("already voted:")
+        const m = await fetchMaker()
+        const abi_updated = await fetchAbi(props.proposal.mongo_id)
+        const v = await checkVoter(props.proposal.sc_address, abi_updated);
         if(v===true){
           setVote("Already Voted")
         }
@@ -71,7 +90,7 @@ const Proposal = (props) => {
     <div class="card" style={{marginBottom:"15px"}}>
     <div class="row" style={{margin:"15px", marginBottom:"0px"}}>
     <div class="col-1" style={{width:"36px", height:"36px", marginRight:"3px"}}><img src="https://i.ibb.co/25ffKLH/Ellipse-1.png" alt="Ellipse-1" border="0" height="36" width="36"/></div>
-    <div class="col-8" style={{textAlign:"left", marginTop:"4px"}}><p>0x5346387920874352631</p></div>
+    <div class="col-8" style={{textAlign:"left", marginTop:"4px"}}><p>{maker}</p></div>
     <div class="col-3" style={{textAlign:"left", marginTop:"4px"}}>
     {dt > de ? <span className="badge bg-danger" style={{ width: "160px" }}>Closed</span> : dt < ds ? <span className="badge bg-warning" style={{ width: "160px"}}>Opening Soon</span> : <span className="badge bg-success" style={{ width: "160px"}}>Active</span>}
     </div>
@@ -88,9 +107,9 @@ const Proposal = (props) => {
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
     {vote === "vote" ?
     <>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={()=>{props.Vote(props.proposal.sc_address, props.proposal.abi, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Agree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={()=>{props.Vote(props.proposal.sc_address, abi, props.proposal.mongo_id, 0, props.proposal.keys.split(":")[1])}} style = {{marginLeft: "50px" }}>Agree</button>
       </div>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.sc_address, props.proposal.abi, props.proposal.mongo_id, 0)}} style = {{marginLeft: "50px" }}>Disagree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.sc_address, abi, props.proposal.mongo_id, 1, props.proposal.keys.split(":")[1])}} style = {{marginLeft: "50px" }}>Disagree</button>
       </div>
       </>: <>
         <div class="col-8"><button type="button" className="btn btn-primary disabled" style = {{marginLeft: "50px" }}>{vote}</button>
@@ -100,7 +119,7 @@ const Proposal = (props) => {
 
     {vote==="vote" || vote==="Already Voted" || dt>de ? 
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
-        <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.sc_address, props.proposal.abi)}} style={{ marginLeftt: "50px"}}>View Voters</button>
+        <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.sc_address, getAbi(props.proposal.mongo_id))}} style={{ marginLeftt: "50px"}}>View Voters</button>
     </div> :<></>}
 
     </div>

@@ -12,12 +12,28 @@ router.get('/fetchallproposals/:protocol',async (req,res)=>{
     try {
         req_adds=[]
         const proposals=await Proposals.find({});  //fetching all notes 
+        // console.log(proposals)
         for(let i=0;i<proposals.length;i++){
             if(proposals[i].protocol==req.params.protocol){
-                req_adds.push({"address":proposal[i].sc_address, "abi":proposal[i].abi})
+                let json = {"address":proposals[i].sc_address, "abi":proposals[i].abi}
+                console.log("json")
+                req_adds.push(json)
             }
         }
-        return res.json(req_adds);
+        console.log(req_adds)
+        return res.send(req_adds);
+    } catch (error) {
+        return res.status(500).send("Some error occured.");
+    }
+});
+
+
+router.get('/fetchabi/:id',async (req,res)=>{
+    try {
+        let proposal=await Proposals.findById(req.params.id); 
+        console.log("here")
+        console.log(proposal)
+        return res.send(proposal.abi)
     } catch (error) {
         return res.status(500).send("Some error occured.");
     }
@@ -83,7 +99,7 @@ router.post('/createprop',
             protocol:req.body.protocol,
             abi:req.body.abi
         });
-        return res.json(prop);
+        return res.json(prop)
     }
     catch(err){
         console.log(err);

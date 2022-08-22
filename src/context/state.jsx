@@ -8,6 +8,29 @@ var axios = require('axios');
 const host="http://localhost:5000";
 // const CONTRACT_ADDRESS = "0x5446Fc945E3F01f202CdD32Dd2f2AbB597725f8A";
 
+//proof is array
+function encrypt(proof, priv_key){
+  return "encrypted_proof"
+}
+
+function encrypt_hash(proof){
+  return 10
+}
+
+//proof is json object
+function encrypt_zkp(zkp, priv_key){
+  return "zkpproof"
+}
+
+function encrypt_zkp_hash(zkp){
+  return 20
+}
+
+function generate_keys(passsphrase) {
+
+  return ["pubkey", "privkey"]
+}
+
 const getContract = async (address, abi) => {
   try {
     const { ethereum } = window;
@@ -74,6 +97,18 @@ async function get(hash) {
   const res = await axios(config);
   console.log(res.data);
   return res.data
+}
+
+const getProposalMaker = async (sc_address, abi) => {
+  try {
+    const connectedContract = await getContract(sc_address, abi);
+    let nftTxn = await connectedContract.proposal_maker.call();
+    // await nftTxn.wait();
+    console.log(nftTxn);
+    return nftTxn
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const askContractToAddHash = async (sc_address, abi, hash) => {
@@ -211,23 +246,33 @@ const ProposalState = (props) => {
   //getALL props:
   const getAllProposals = async (protocol_name) => {
     // fetch address and abis from mongodb:
-    const response = await fetch(`${host}/api/proposal/fetchallproposals/${protocol_name}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    // json is list of addresses and abis of smart contracts of proposals of 'protocol_name'
-    const json= await response.json(); 
-    console.log(json)
+    // console.log("here")
+    let json={}
+    try {
+      const response = await fetch(`${host}/api/proposal/fetchallproposals/${protocol_name}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      // json is list of addresses and abis of smart contracts of proposals of 'protocol_name'
+      json= await response.json(); 
+      console.log("json")
+    } catch (error) {
+      console.log(error)
+      return
+    }
 
     let protocol_props = []
 
     for(let i=0;i<json.length;i++){
       let add = json[i].address
       let abi = json[i].abi
+      console.log(json)
       let contract = await getContract(add, abi)
-      let hash = await contract.proposal_CID;
+      let hash = await contract.get_hash();
+      console.log(hash)
+      window.alert("Fetching proposals..Please wait")
       let prop = await get(hash)
       protocol_props.push(prop)
     }
@@ -241,17 +286,26 @@ const ProposalState = (props) => {
     //deploy sc based on protocol name:
     let sc_address = Deploy()
     let abi = proposals_abi.abi
+    console.log((abi[0]))
     
     //add to mongodb:
-    const response = await fetch(`${host}/api/proposal/createprop`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({"sc_address":sc_address, "protocol":protocol, "abi":abi }) 
-    });
-    const json= await response.json();
-    console.log(json) 
+    let json = {}
+    try {
+      const response = await fetch(`${host}/api/proposal/createprop`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"sc_address":sc_address, "protocol":protocol, "abi":abi }) 
+      });
+      json= await response.json();
+      console.log(json) 
+    } catch (error) {
+      console.log(error)
+      return
+    }
+    //generate keys
+    let {pub, priv} = generate_keys("passphrase")
 
     let mongo_prop_id = json._id
     let data = {
@@ -263,7 +317,7 @@ const ProposalState = (props) => {
       "mongo_id": mongo_prop_id,
       "protocol": protocol,
       "sc_address":sc_address,
-      "keys":"publickey:privatekey"
+      "keys":pub+':'+priv
     }
 
     // add to ipfs and get hash
@@ -275,8 +329,8 @@ const ProposalState = (props) => {
     await askContractToAddHash(sc_address, abi, hash);
 
     //add encrypted keys to smart contract
-    let publickey_encrypt = "public_key"
-    let privatekey_encypt = "private_key"
+    let publickey_encrypt = encrypt_hash(pub)
+    let privatekey_encypt = encrypt_hash(priv)
     await askContractToAddkeys(sc_address, abi, publickey_encrypt, privatekey_encypt)
 
     //adding in front end
@@ -286,10 +340,28 @@ const ProposalState = (props) => {
   const checkVoter = async (sc_address, abi) => {
 
     let contract = await getContract(sc_address, abi)
-    let has_voted = await contract.checkVoted()
-    return has_voted;
+    window.alert("Checking your voting status..Please wait")
+    let voted = await contract.checkVoted()
+    return voted;
 
     // await getAllProposals(protocol);
+  }
+
+  const getAbi = async (mongo_id) => {
+
+    const response = await fetch(`${host}/api/proposal/fetchabi/${mongo_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    var config = {
+      method: 'get',
+      url: response.url
+    };
+    const res = await axios(config);
+    console.log(res.data)
+    return res.data;
   }
 
   // const getVoterslist = async (protocol, proposal_id) => {
@@ -311,22 +383,23 @@ const ProposalState = (props) => {
   }
 
   //return to frontend: zkp, hash of zkp
-  const registerVote = async (sc_address, abi, proposal_mongo_id, option_id) => {
+  const registerVote = async (sc_address, abi, proposal_mongo_id, option_id, priv_key, key_upload, proof_upload) => {
 
     //generate zkp
-    let zkp = await getZKP(option_id)
-    console.log(zkp)
+    // let zkp = await getZKP(option_id)
+    // console.log(zkp)
+    let zkp = {"key":key_upload, "proof":proof_upload} //should be an array
 
     //encrypt zkp with priv key
-    //tbd
+    let zkp_encrypted = encrypt_zkp(zkp, priv_key)
 
     //add encrypted zkp to mongodb
-    const response = await fetch(`${host}/api/proposal/vote/${proposal_mongo_id}/${option_id}`, {
+    let response = await fetch(`${host}/api/proposal/vote/${proposal_mongo_id}/${option_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({"proof":zkp }) 
+      body: JSON.stringify({"proof":zkp_encrypted }) 
     });
     console.log(response)
 
@@ -335,15 +408,14 @@ const ProposalState = (props) => {
     console.log(txn)
 
     //add hash of zkp to sc:
-    //tbd
-    let zkphash = zkp
+    let zkphash = encrypt_zkp_hash(zkp)
     let txn_hash = await askContractToAddZKPhash(sc_address, abi, zkphash);
     console.log(txn_hash)
   }
 
 
   return (
-    <context.Provider value={{ proposals, getAllProposals, addProposal, currentAccount, checkIfWalletIsConnected, connectWallet, tokens, getTokens, checkVoter, registerVote }}>
+    <context.Provider value={{ getProposalMaker, getAbi, proposals, getAllProposals, addProposal, currentAccount, checkIfWalletIsConnected, connectWallet, tokens, getTokens, checkVoter, registerVote }}>
       {props.children}
     </context.Provider>
   );

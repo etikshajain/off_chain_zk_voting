@@ -5,19 +5,18 @@ const ProposalSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    abi:{
-        type:String,
-        required:true
-    },
+    abi:[
+        Object
+    ],
     protocol:{
         type:String,
         required:true
     },
     agree:[
-        [Number]
+        String
     ],
     disagree:[
-        [Number]
+        String
     ]
     
 });
