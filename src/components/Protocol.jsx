@@ -51,10 +51,8 @@ const Protocol = (props) => {let location = useLocation();
         refClose.current.click();
     }
 
-    const Vote = async (sc_address, abi, proposal_mongo_id, option_id, priv_key, key, proof)=>{
-        setModal("TakeInput")
-        const r = await registerVote(sc_address, abi, proposal_mongo_id, option_id, priv_key, key, proof)
-        // alert("Voting successful!");
+    const Vote = async (sc_address, abi, proposal_mongo_id, option_id, priv_key, proof)=>{
+        const r = await registerVote(sc_address, abi, proposal_mongo_id, option_id, priv_key, proof)
         navigate("/protocols")
         getAllProposals(props.protocol)
         // window.location.reload(true);
@@ -84,17 +82,11 @@ const Protocol = (props) => {let location = useLocation();
                     <table className="table" style={{border:"1px solid black"}}>
                     <thead>
                         <tr style={{textAlign:"center", border:"1px solid black"}}>
-                        <th scope="col" style={{textAlign:"center", border:"1px solid black"}}>
-                        <form method="post" enctype="multipart/form-data">
-                          <div>
-                            <label for="file">Choose encrypted proof to upload</label>
-                            <input type="file" id="file" name="file" multiple />
-                          </div>
-                          <div>
-                            <button onClick={()=>{}}>Submit</button>
-                          </div>
-                          </form>
-                        </th>
+
+                        
+                        <div className="modal-footer">
+                            <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                         </tr>
                     </thead>
                     </table>

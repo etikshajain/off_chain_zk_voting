@@ -11,6 +11,11 @@ const Proposal = (props) => {
   let dt = new Date();
   let ds = new Date(props.proposal.start_time);
   let de = new Date(props.proposal.end_time);
+  const [proof, setproof] = useState("")
+
+  const handleOnChange = (e) => {
+    setproof(e.target.value);
+  }
   useEffect(() => {
     getTokens(props.proposal.protocol);
 
@@ -107,9 +112,9 @@ const Proposal = (props) => {
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
     {vote === "vote" ?
     <>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={()=>{props.Vote(props.proposal.sc_address, abi, props.proposal.mongo_id, 0, props.proposal.keys.split(":")[1])}} style = {{marginLeft: "50px" }}>Agree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={()=>{props.Vote(props.proposal.sc_address, abi, props.proposal.mongo_id, 0, props.proposal.keys.split(":")[1], proof)}} style = {{marginLeft: "50px" }}>Agree</button>
       </div>
-      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.sc_address, abi, props.proposal.mongo_id, 1, props.proposal.keys.split(":")[1])}} style = {{marginLeft: "50px" }}>Disagree</button>
+      <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.sc_address, abi, props.proposal.mongo_id, 1, props.proposal.keys.split(":")[1], proof)}} style = {{marginLeft: "50px" }}>Disagree</button>
       </div>
       </>: <>
         <div class="col-8"><button type="button" className="btn btn-primary disabled" style = {{marginLeft: "50px" }}>{vote}</button>
@@ -121,6 +126,9 @@ const Proposal = (props) => {
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
         <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.sc_address, getAbi(props.proposal.mongo_id))}} style={{ marginLeftt: "50px"}}>View Voters</button>
     </div> :<></>}
+
+    <label htmlFor="title" className="form-label">Encrypted proof</label>
+    <textarea className="form-control" id="title" name="title" rows="1" value={proof} onChange={handleOnChange}  ></textarea>
 
     </div>
     </>
