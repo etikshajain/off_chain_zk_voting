@@ -8,20 +8,8 @@ var axios = require('axios');
 const host="http://localhost:5000";
 // const CONTRACT_ADDRESS = "0x5446Fc945E3F01f202CdD32Dd2f2AbB597725f8A";
 
-//proof is array
-function encrypt(proof, priv_key){
-  return "encrypted_proof"
-}
 
-function encrypt_hash(proof){
-  return 10
-}
-
-//proof is json object
-function encrypt_zkp(zkp, priv_key){
-  return "zkpproof"
-}
-
+//
 function encrypt_zkp_hash(zkp){
   return 20
 }
@@ -383,15 +371,15 @@ const ProposalState = (props) => {
   }
 
   //return to frontend: zkp, hash of zkp
-  const registerVote = async (sc_address, abi, proposal_mongo_id, option_id, priv_key, key_upload, proof_upload) => {
+  const registerVote = async (sc_address, abi, proposal_mongo_id, option_id, priv_key, proof_upload) => {
 
     //generate zkp
     // let zkp = await getZKP(option_id)
     // console.log(zkp)
-    let zkp = {"key":key_upload, "proof":proof_upload} //should be an array
+    // let zkp = {"key":key_upload, "proof":proof_upload} //should be an array
 
     //encrypt zkp with priv key
-    let zkp_encrypted = encrypt_zkp(zkp, priv_key)
+    let zkp_encrypted = proof_upload
 
     //add encrypted zkp to mongodb
     let response = await fetch(`${host}/api/proposal/vote/${proposal_mongo_id}/${option_id}`, {
@@ -408,7 +396,7 @@ const ProposalState = (props) => {
     console.log(txn)
 
     //add hash of zkp to sc:
-    let zkphash = encrypt_zkp_hash(zkp)
+    let zkphash = encrypt_zkp_hash(zkp_encrypted)
     let txn_hash = await askContractToAddZKPhash(sc_address, abi, zkphash);
     console.log(txn_hash)
   }

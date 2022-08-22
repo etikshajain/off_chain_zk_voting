@@ -87,18 +87,7 @@ const Protocol = (props) => {let location = useLocation();
                         <th scope="col" style={{textAlign:"center", border:"1px solid black"}}>
                         <form method="post" enctype="multipart/form-data">
                           <div>
-                            <label for="file">Choose key to upload</label>
-                            <input type="file" id="file" name="file" multiple />
-                          </div>
-                          <div>
-                            <button onClick={()=>{}}>Submit</button>
-                          </div>
-                          </form>
-                        </th>
-                        <th scope="col" style={{textAlign:"center", border:"1px solid black"}}>
-                        <form method="post" enctype="multipart/form-data">
-                          <div>
-                            <label for="file">Choose proof to upload</label>
+                            <label for="file">Choose encrypted proof to upload</label>
                             <input type="file" id="file" name="file" multiple />
                           </div>
                           <div>
