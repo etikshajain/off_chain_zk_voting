@@ -1,7 +1,7 @@
 
 export default function generateKeys(  ){
     
-        const { generateKeyPair } = require('crypto');
+        const { generateKeyPair } = require('crypto-es');
         var voterpublickey;
         var voterprivatekey;
        generateKeyPair('ec', {

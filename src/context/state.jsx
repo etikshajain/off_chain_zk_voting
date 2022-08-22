@@ -2,16 +2,21 @@ import context from "./context"
 import React, { useState } from "react"
 import { ethers } from "ethers";
 import proposals_abi from '../utils/proposals.json';
-import Deploy from '../components/deploy'
-// import generateProof from '../components/generateProof'
+import hashproof from "../components/hash";
+import deployAAVE from "../components/Deploy/deployAAVE.js";
+import deployBALANCER from "../components/Deploy/deployBALANCER.js"; 
+import deployCURVE from "../components/Deploy/deployCURVE.js";
+import deployUNI from "../components/Deploy/deployUNI.js";
+import deployQUICKSWAP from "../components/Deploy/deployQUICKSWAP.js";
+
 var axios = require('axios');
 const host="http://localhost:5000";
 // const CONTRACT_ADDRESS = "0x5446Fc945E3F01f202CdD32Dd2f2AbB597725f8A";
 
 
 //
-function encrypt_zkp_hash(zkp){
-  return 20
+function encrypt_zkp_hash(string){
+  return hashproof(string);
 }
 
 function generate_keys(passsphrase) {
@@ -272,7 +277,7 @@ const ProposalState = (props) => {
   const addProposal = async (title, description, start_time, end_time, voting_type, protocol) => {
 
     //deploy sc based on protocol name:
-    let sc_address = Deploy()
+    let sc_address = await deployBALANCER();
     let abi = proposals_abi.abi
     console.log((abi[0]))
     
@@ -317,8 +322,8 @@ const ProposalState = (props) => {
     await askContractToAddHash(sc_address, abi, hash);
 
     //add encrypted keys to smart contract
-    let publickey_encrypt = encrypt_hash(pub)
-    let privatekey_encypt = encrypt_hash(priv)
+    let publickey_encrypt = hashproof(pub)
+    let privatekey_encypt = hashproof(priv)
     await askContractToAddkeys(sc_address, abi, publickey_encrypt, privatekey_encypt)
 
     //adding in front end
