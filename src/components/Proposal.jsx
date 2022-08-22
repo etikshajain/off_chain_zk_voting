@@ -116,19 +116,20 @@ const Proposal = (props) => {
       </div>
       <div class="col-4"><button type="button" className="btn btn-primary" onClick={() =>{props.Vote(props.proposal.sc_address, abi, props.proposal.mongo_id, 1, props.proposal.keys.split(":")[1], proof)}} style = {{marginLeft: "50px" }}>Disagree</button>
       </div>
+      <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
+    <label htmlFor="title" className="form-label">Encrypted proof</label>
+    <textarea className="form-control" id="title" name="title" rows="1" value={proof} onChange={handleOnChange}  ></textarea>
+    </div>
       </>: <>
         <div class="col-8"><button type="button" className="btn btn-primary disabled" style = {{marginLeft: "50px" }}>{vote}</button>
       </div>
       </>}
     </div>
 
-    {vote==="vote" || vote==="Already Voted" || dt>de ? 
+    {dt<de ? 
     <div class="row" style={{margin:"15px", marginTop:"0px", textAlign:"left"}}>
-        <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.sc_address, getAbi(props.proposal.mongo_id))}} style={{ marginLeftt: "50px"}}>View Voters</button>
+        <button type="button" className="btn btn-primary" onClick={() => {props.ViewVoters(props.proposal.mongo_id)}} style={{ marginLeftt: "50px"}}>Check Results</button>
     </div> :<></>}
-
-    <label htmlFor="title" className="form-label">Encrypted proof</label>
-    <textarea className="form-control" id="title" name="title" rows="1" value={proof} onChange={handleOnChange}  ></textarea>
 
     </div>
     </>

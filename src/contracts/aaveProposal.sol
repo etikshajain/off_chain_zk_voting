@@ -31,7 +31,7 @@ contract AAVEProposal {
 
 
      modifier checkToken(){
-        require(curve.balanceOf(msg.sender) > 0, "Invalid User");
+        // require(curve.balanceOf(msg.sender) > 0, "Invalid User");
         _;
      }
 
@@ -41,7 +41,7 @@ contract AAVEProposal {
 
     // Functions to be executed during Creation of a Proposal
     // shall I put all my logic into constructor?
-    function set_CID ( string memory  _cid ) private {
+    function set_CID ( string memory  _cid ) public {
         require(msg.sender == proposal_maker,"Invalid User");
         require(nonceCID == 0, "Already done");
         proposal_CID = _cid;
@@ -58,6 +58,13 @@ contract AAVEProposal {
         nonceKeys++;
     }
     
+    function checkVoted() public view checkToken returns(bool) {
+        return has_voted[msg.sender];
+    }
+
+    function get_hash() public view checkToken returns(string memory) {
+        return proposal_CID;
+    }
  
     // Update mapping when user votes
     function updateVote() public checkToken   {

@@ -1,5 +1,5 @@
 const Deploy = (props) => {
-    let address = "0xCCe5562517d16d0E7aAEdcabc6497C302898F045"
+    let address = "0xF2077C83A59A3098C5d3908a5533787c1a3da2b1"
   return address;
 }
 

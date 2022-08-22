@@ -11,8 +11,11 @@ const Protocol = (props) => {let location = useLocation();
       //console.log(location.pathname);
   }, [location]);
 
-  const { proposals, getAllProposals , tokens, getTokens, registerVote, currentAccount} = useContext(proposalContext);
+  const { get_results,proposals, getAllProposals , tokens, getTokens, registerVote, currentAccount} = useContext(proposalContext);
   const [create, setCreate] = useState(false);
+  const [yescount, setyescount] = useState(0);
+  const [nocount, setnocount] = useState(0);
+  const [hash, sethash] = useState("");
 
   useEffect(() => {
     getAllProposals(props.protocol);
@@ -31,19 +34,15 @@ const Protocol = (props) => {let location = useLocation();
   const [modal,setModal]=useState("");
   const[voters,setVoters]=useState([]);
 
-    const ViewVoters = async (sc_address, abi)=>{
-        // setModal("voters")
-        // const voters_list = await getVoterslist(protocol, proposal_id)
-        // if(voters===undefined){
-        //   setVoters([]);
-        // }
-        // else{
-        //   setVoters(voters_list);
-        // }
-        // ref.current.click();
-        // refClose.current.click();
-        // console.log(voters);
-        window.alert("voter list how?")
+    const ViewVoters = async (mongo_id)=>{
+        const {yes, no,hash} = await get_results(mongo_id)
+        setyescount(yes)
+        setnocount(no)
+        sethash(hash)
+        setModal("Results")
+      ref.current.click();
+        refClose.current.click();
+        // window.alert("voter list how?")
     }
     const ViewProp = async (proposal)=>{
         setModal(proposal)
@@ -72,21 +71,26 @@ const Protocol = (props) => {let location = useLocation();
             <div className="modal-dialog modal-xl">
                 <div className="modal-content">
                 <div className="modal-header">
-                    <h1 className="modal-title" id="exampleModalLabel">{modal==="TakeInput"?"Please upload zkp and public key":modal.title}</h1>
+                    <h1 className="modal-title" id="exampleModalLabel">{modal==="Results"?"Results":modal.title}</h1>
                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
                 <form className="my-3">
-                    {modal==="takeInput"?
+                    {modal==="Results"?
                     <div className="mb-3">
                     <table className="table" style={{border:"1px solid black"}}>
                     <thead>
                         <tr style={{textAlign:"center", border:"1px solid black"}}>
-
-                        
-                        <div className="modal-footer">
-                            <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
+                          <th>Agree </th>
+                          <td>{yescount}</td>
+                        </tr>
+                        <tr style={{textAlign:"center", border:"1px solid black"}}>
+                          <th>Disagree </th>
+                          <td>{nocount}</td>
+                        </tr>
+                        <tr style={{textAlign:"center", border:"1px solid black"}}>
+                          <th>List of proofs on IpfsHash </th>
+                          <td>{hash}</td>
                         </tr>
                     </thead>
                     </table>
@@ -123,7 +127,7 @@ const Protocol = (props) => {let location = useLocation();
           
           <div className="col-3" style={{marginTop:"40px"}}>
           <div class="card">
-            <img src="https://i.ibb.co/R6bR9mn/Rectangle-16.png" alt="Rectangle-16" className="protocol-img" width="120" height="120"/>
+          <Link to="/protocol"><img src="https://i.ibb.co/pnTyFcH/aave.jpg" alt="Rectangle-16" className="protocol-img" width="120" height="120"/></Link>
             <div class="card-body">
               <h5 class="card-title">ENS</h5>
               {create === true ?<Link to="/createprop" className="btn btn-dark">New Proposal</Link> : <button className="btn btn-dark disabled">New Proposal</button>}

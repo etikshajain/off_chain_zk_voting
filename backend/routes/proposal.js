@@ -39,6 +39,15 @@ router.get('/fetchabi/:id',async (req,res)=>{
     }
 });
 
+router.get('/fetchresults/:id',async (req,res)=>{
+    try {
+        let proposal=await Proposals.findById(req.params.id);
+        return res.send(proposal)
+    } catch (error) {
+        return res.status(500).send("Some error occured.");
+    }
+});
+
 //fetch all options of a proposal: GET: /api/proposal/fetchoptions
 // router.get('/fetchoptions/:id',async (req,res)=>{
 //     try {

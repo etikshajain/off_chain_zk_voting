@@ -54,7 +54,7 @@ async function upload(json) {
     },
     "pinataMetadata": {
       "name": "off_chain_zk_voting",
-      "keyvalues": json
+      "keyvalues": {"json":"json"}
     },
     "pinataContent":json
   });
@@ -317,8 +317,8 @@ const ProposalState = (props) => {
     await askContractToAddHash(sc_address, abi, hash);
 
     //add encrypted keys to smart contract
-    let publickey_encrypt = encrypt_hash(pub)
-    let privatekey_encypt = encrypt_hash(priv)
+    let publickey_encrypt = encrypt_zkp_hash(pub)
+    let privatekey_encypt = encrypt_zkp_hash(priv)
     await askContractToAddkeys(sc_address, abi, publickey_encrypt, privatekey_encypt)
 
     //adding in front end
@@ -352,6 +352,26 @@ const ProposalState = (props) => {
     return res.data;
   }
 
+  const get_results = async (mongo_id) => {
+
+    const response = await fetch(`${host}/api/proposal/fetchresults/${mongo_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    var config = {
+      method: 'get',
+      url: response.url
+    };
+    const res = await axios(config);
+    // console.log(res.data)
+    let proposal = res.data
+    let hash = await upload({"agree":proposal.agree, "disagree":proposal.disagree})
+    return {"yes":proposal.agree.length, "no":proposal.disagree.length, "hash":hash}
+    // return res.data;
+  }
+
   // const getVoterslist = async (protocol, proposal_id) => {
 
   //   let voters_list = await askContractToFetchVoters(protocol, proposal_id)
@@ -363,20 +383,8 @@ const ProposalState = (props) => {
   //   return voters_list;
   // }
 
-  //option_id=0 for agress, 1 for disagree
-  const getZKP = async(option_id) => {
-    window.alert("Generating ZKP.. Please wait.")
-    // const {proof, signals} = await generateProof(option_id);
-    return [0,1,2];
-  }
-
   //return to frontend: zkp, hash of zkp
   const registerVote = async (sc_address, abi, proposal_mongo_id, option_id, priv_key, proof_upload) => {
-
-    //generate zkp
-    // let zkp = await getZKP(option_id)
-    // console.log(zkp)
-    // let zkp = {"key":key_upload, "proof":proof_upload} //should be an array
 
     //encrypt zkp with priv key
     let zkp_encrypted = proof_upload
@@ -402,8 +410,9 @@ const ProposalState = (props) => {
   }
 
 
+
   return (
-    <context.Provider value={{ getProposalMaker, getAbi, proposals, getAllProposals, addProposal, currentAccount, checkIfWalletIsConnected, connectWallet, tokens, getTokens, checkVoter, registerVote }}>
+    <context.Provider value={{ get_results, getProposalMaker, getAbi, proposals, getAllProposals, addProposal, currentAccount, checkIfWalletIsConnected, connectWallet, tokens, getTokens, checkVoter, registerVote }}>
       {props.children}
     </context.Provider>
   );

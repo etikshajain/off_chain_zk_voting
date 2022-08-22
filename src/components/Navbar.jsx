@@ -30,6 +30,10 @@ const Navbar = props => {
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <form class="d-flex" role="search">
+                    <a class="btn btn-outline-dark nav-btn" href="https://www.notion.so/Steps-to-generate-the-ZKProof-bd3a369883d54edaab5804a0592b4da2" target="_blank" download="">Instructions to Vote</a>
+                    {/* <button class="btn btn-outline-dark nav-btn" type="submit" onClick={connectWallet}>Connect Wallet</button> */}
+                </form>
+                <form class="d-flex" role="search">
                     <button class="btn btn-outline-dark nav-btn" type="submit" onClick={connectWallet}>Connect Wallet</button>
                 </form>
             </div>
