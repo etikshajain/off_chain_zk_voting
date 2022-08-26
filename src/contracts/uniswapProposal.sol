@@ -31,7 +31,7 @@ contract uniProposal {
 
 
      modifier checkToken(){
-        // require(uniswap.balanceOf(msg.sender) > 0, "Invalid User");
+         require(uniswap.balanceOf(msg.sender) > 0, "Invalid User");
         _;
      }
 
