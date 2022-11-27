@@ -322,13 +322,8 @@ const ProposalState = (props) => {
     await askContractToAddHash(sc_address, abi, hash);
 
     //add encrypted keys to smart contract
-<<<<<<< HEAD
     let publickey_encrypt = encrypt_zkp_hash(pub)
     let privatekey_encypt = encrypt_zkp_hash(priv)
-=======
-    let publickey_encrypt = hashproof(pub)
-    let privatekey_encypt = hashproof(priv)
->>>>>>> deff0f40197c075bd2b0b60f07ad3fccc756af2b
     await askContractToAddkeys(sc_address, abi, publickey_encrypt, privatekey_encypt)
 
     //adding in front end
