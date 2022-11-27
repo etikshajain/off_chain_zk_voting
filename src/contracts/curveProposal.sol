@@ -31,7 +31,7 @@ contract curveProposal {
 
 
      modifier checkToken(){
-        // require(curve.balanceOf(msg.sender) > 0, "Invalid User");
+         require(curve.balanceOf(msg.sender) > 0, "Invalid User");
         _;
      }
 

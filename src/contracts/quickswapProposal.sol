@@ -31,7 +31,7 @@ contract quickProposal {
 
 
      modifier checkToken(){
-        // require( quickswap.balanceOf(msg.sender) > 0, "Invalid User" );
+        require( quickswap.balanceOf(msg.sender) > 0, "Invalid User" );
         _;
      }
 
